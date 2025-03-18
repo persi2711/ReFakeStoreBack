@@ -62,7 +62,7 @@ export class UsuariosService {
       await this.direccionesRepository.create(createDrieccionDto);
     direccion.Usuario = user;
     await this.direccionesRepository.save(direccion);
-    return 'se creo la direccion';
+    return { message: 'se creo la direccion exitosamente' };
   }
 
   async updateDirec(id: string, updateDireccionDto: updateDireccionDto) {
@@ -74,9 +74,9 @@ export class UsuariosService {
     }
     await this.direccionesRepository.merge(direccion, updateDireccionDto);
     await this.direccionesRepository.save(direccion);
-    return 'se actualizo la direccion';
+    return { message: 'se actualizo la direccion' };
   }
-  async GetDirec(user: Usuario) {
+  async GetDirec(user: Usuario): Promise<Direcciones[]> {
     return await this.direccionesRepository.find({ where: { Usuario: user } });
   }
   async deleteDirec(id: string) {
@@ -87,5 +87,6 @@ export class UsuariosService {
       throw new NotFoundException('no se encontro la dieccion');
     }
     await this.direccionesRepository.delete(direccion);
+    return { message: 'se elimino la direccion' };
   }
 }

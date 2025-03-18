@@ -19,9 +19,16 @@ async function bootstrap() {
   );
   const config = new DocumentBuilder()
     .setTitle('ReFakeStore')
-    .setDescription('By Emmanuel')
+    .setDescription('By persi2711')
     .setVersion('1.0')
     .addBearerAuth()
+    .addTag('App')
+    .addTag('Auth')
+    .addTag('Productos')
+    .addTag('Direcciones')
+    .addTag('Mpagos')
+    .addTag('Carritos')
+    .addTag('Ordenes')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

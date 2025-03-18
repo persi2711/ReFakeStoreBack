@@ -28,7 +28,7 @@ export class MpagosService {
     const mpago = await this.mPagosRepository.create(createMpagoDto);
     mpago.Usuario = user;
     await this.mPagosRepository.save(mpago);
-    return 'Se creo el pago';
+    return { message: 'se creo el metodo de pago' };
   }
 
   async findAll(user: Usuario) {
@@ -42,7 +42,7 @@ export class MpagosService {
     }
     await this.mPagosRepository.merge(mpago, updateMpagoDto);
     await this.mPagosRepository.save(mpago);
-    return `se actualizo el metodo de pago`;
+    return { message: 'se actualizo el metodo de pago' };
   }
 
   async remove(id: string) {
@@ -51,6 +51,6 @@ export class MpagosService {
       throw new NotFoundException('no se encontro el metodo de pago');
     }
     await this.mPagosRepository.remove(mpago);
-    return `This action removes a #${id} mpago`;
+    return { message: 'se elimino el metodo de pago' };
   }
 }

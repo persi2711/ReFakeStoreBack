@@ -44,6 +44,12 @@ export class OrdenesService {
     if (!carrito) {
       throw new NotFoundException('no se encotro el carrito');
     }
+    if (!carrito.State) {
+      throw new NotFoundException('el carrito esta inactivo');
+    }
+    if (carrito.Total === 0) {
+      throw new NotFoundException('el carrito esta vacio');
+    }
     const orden = await this.ordenesRepository.create({
       CreateDate: Date().toString(),
       usuario: user,
@@ -70,7 +76,7 @@ export class OrdenesService {
 
     await this.carritoRepository.save(newCarrito);
 
-    return 'se creo la orden';
+    return { message: 'Orden creada exitosamente' };
   }
 
   async findAll() {

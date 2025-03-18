@@ -13,6 +13,7 @@ import { JwtPayload } from './Interfaces/jwt-payload.interface';
 import { CreateUsuarioDto } from '../usuarios/dto/create-usuario.dto';
 import { Carrito } from 'src/StoreModule/carritos/entities/carrito.entity';
 import { CreateCarritoDto } from 'src/StoreModule/carritos/dto/create-carrito.dto';
+import { LoginResponseDto } from './ResponseDto/LoginResponse.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
     private carritoRespository: Repository<Carrito>,
     private readonly jwtService: JwtService,
   ) {}
-  async login(loginUsuarioDto: LoginUsuarioDdto) {
+  async login(loginUsuarioDto: LoginUsuarioDdto): Promise<LoginResponseDto> {
     const usuario = await this.userRepository.findOne({
       where: { Correo: loginUsuarioDto.Correo },
       select: {
@@ -41,16 +42,19 @@ export class AuthService {
     if (!bcrypt.compareSync(loginUsuarioDto.Password, usuario.Password)) {
       throw new NotFoundException('correo o contraseñas son incorrectos');
     }
-    return {
-      token: this.getJwtToken({
+
+    return new LoginResponseDto(
+      this.getJwtToken({
         Id: usuario.Id,
         Nombre: usuario.Nombre,
         Apellido: usuario.Apellido,
         Correo: usuario.Correo,
       }),
-    };
+    );
   }
-  async register(createUsuarioDto: CreateUsuarioDto) {
+  async register(
+    createUsuarioDto: CreateUsuarioDto,
+  ): Promise<{ message: string }> {
     const usuario = await this.userRepository.create(createUsuarioDto);
     const correo = await this.userRepository.findOne({
       where: { Correo: createUsuarioDto.Correo },
@@ -69,7 +73,7 @@ export class AuthService {
       usuario: usuario,
     });
     this.carritoRespository.save(carrito);
-    return 'Se creo el usuario con exito';
+    return { message: 'Usuario registrado exitosamente' };
   }
 
   private getJwtToken(payload: JwtPayload) {

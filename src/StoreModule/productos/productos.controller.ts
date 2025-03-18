@@ -12,9 +12,11 @@ import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { GetProductoDto } from './dto/get-producto.dto';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductsRespond } from './dto/productRespond-producto.dto';
-
+import { ProductoRespond } from '../carritos/dto/RespondCarrito.dto';
+import { Productos } from './entities/producto.entity';
+@ApiTags('Productos')
 @Controller('productos')
 export class ProductosController {
   constructor(private readonly productosService: ProductosService) {}
@@ -52,10 +54,22 @@ export class ProductosController {
     type: String,
     description: 'busqueda por categoria',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'productos obtenidos correctamente',
+    type: ProductoRespond,
+  })
   findAll(@Query() getProductoDto: GetProductoDto): Promise<ProductsRespond> {
     return this.productosService.findAll(getProductoDto);
   }
-
+  @ApiOperation({
+    summary: 'Metodo para obtener un producto',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'producto obtenido correctamente',
+    type: Productos,
+  })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productosService.findOne(id);

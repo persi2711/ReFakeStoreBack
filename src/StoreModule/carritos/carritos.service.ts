@@ -28,6 +28,10 @@ export class CarritosService {
       where: { Id: id },
       relations: ['carritoProducto', 'carritoProducto.producto'],
     });
+    if (!carrito) {
+      throw new NotFoundException('No se encontrol el carrito');
+    }
+    return carrito;
   }
 
   async agregar(id: string, user: Usuario) {
@@ -64,7 +68,7 @@ export class CarritosService {
       await this.carritoProductoRespository.save(carritoProducto);
     }
     await this.carritoRepository.save(carrito);
-    return 'se agrego el producto al carrito';
+    return { message: 'Se agrego el producto al carrito' };
   }
   async reducir(id: string, user: Usuario) {
     const producto = await this.productoRepository.findOne({
@@ -100,7 +104,7 @@ export class CarritosService {
       throw new BadRequestException('no existe el elemento en el carrito');
     }
     await this.carritoRepository.save(carrito);
-    return 'se redujo el elemento';
+    return { message: 'se elimino el producto del carrito' };
   }
   async ActiveCar(user: Usuario) {
     const carrito = await this.carritoRepository.findOne({
