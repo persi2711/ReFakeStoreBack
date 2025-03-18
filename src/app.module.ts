@@ -21,7 +21,6 @@ import { ProductosModule } from './StoreModule/productos/productos.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
-      synchronize: true,
     }),
     AuthModule,
     UsuariosModule,
