@@ -26,15 +26,26 @@ export class AppService {
     if (password !== storedPassword) {
       throw new Error('Contraseña incorrecta');
     }
-    const filePath = path.join(__dirname, '../data/Products.json');
-    if (!fs.existsSync(filePath)) {
-      throw new Error('El archivo JSON no existe');
+    try {
+      // Usar ruta relativa para leer el archivo JSON
+      const filePath = path.join(__dirname, '..', 'data', 'Products.json');
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+      // Verificar que los datos estén bien formateados
+      const formattedData = data.map((product) => ({
+        title: product.title,
+        price: product.price,
+        category: product.category,
+        description: product.description || '', // Agregar valor por defecto si no existe
+        image: product.image,
+      }));
+
+      // Usar el método save() para la inserción masiva
+      const result = await this.productoRepository.save(formattedData);
+      return 'Datos cargados correctamente';
+    } catch (error) {
+      console.error('Error inserting products:', error);
+      throw error;
     }
-
-    const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-
-    await this.productoRepository.save(jsonData);
-
-    return 'Datos cargados correctamente';
   }
 }
