@@ -27,20 +27,17 @@ export class AppService {
       throw new Error('Contraseña incorrecta');
     }
     try {
-      // Usar ruta relativa para leer el archivo JSON
       const filePath = path.join(__dirname, '..', 'data', 'Products.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
-      // Verificar que los datos estén bien formateados
       const formattedData = data.map((product) => ({
         title: product.title,
         price: product.price,
         category: product.category,
-        description: product.description || '', // Agregar valor por defecto si no existe
+        description: product.description || '',
         image: product.image,
       }));
 
-      // Usar el método save() para la inserción masiva
       const result = await this.productoRepository.save(formattedData);
       return 'Datos cargados correctamente';
     } catch (error) {

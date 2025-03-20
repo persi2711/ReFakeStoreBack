@@ -22,8 +22,6 @@ import { Carrito } from 'src/StoreModule/carritos/entities/carrito.entity';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        // console.log('JWT Secret', configService.get('JWT_SECRET') )
-        // console.log('JWT SECRET', process.env.JWT_SECRET)
         return {
           secret: configService.get('JWT_SECRET'),
           signOptions: {
@@ -32,12 +30,6 @@ import { Carrito } from 'src/StoreModule/carritos/entities/carrito.entity';
         };
       },
     }),
-    // JwtModule.register({
-    // secret: process.env.JWT_SECRET,
-    // signOptions: {
-    //   expiresIn:'2h'
-    // }
-    // })
   ],
   exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule],
 })
